@@ -6,18 +6,17 @@
 path="$(realpath "${0%/*}")"
 
 if ! hash git >/dev/null 2>&1; then
-    echo "ERROR: Script requires git installed"
+    echo "ERROR: Script requires rsync and git installed"
     exit 1
 fi
 
 if [[ -d $path ]]; then
     cd "$path" || exit
-    rm -f archlabs-testing.* archlabs-testing.db.tar.gz
-    repo-add archlabs-testing.db.tar.gz ./*.pkg.tar.xz ./*.pkg.tar.zst || exit
-	rm -f archlabs-testing.db archlabs-testing.files
-    cp -f archlabs-testing.db.tar.gz archlabs-testing.db || exit
-	cp -f archlabs-testing.files.tar.gz archlabs-testing.files || exit
-
+    rm -f archlabs.* archlabs_repo.db.tar.gz
+    repo-add archlabs.db.tar.gz ./*.pkg.tar.xz ./*.pkg.tar.zst || exit
+	rm -f archlabs.db archlabs.files
+    cp -f archlabs.db.tar.gz archlabs.db || exit
+	cp -f archlabs.db.tar.gz archlabs.files || exit
 
 	echo -e "\nPushing to git origin"
     if [[ -e $HOME/.gitconfig ]]; then
@@ -30,7 +29,7 @@ if [[ -d $path ]]; then
         exit 1
     fi
 else
-    echo -e "\nCannot find repo directory: '$path'"
+    echo -e "ERROR: Cannot find repo directory: '$path'"
     exit 1
 fi
 
